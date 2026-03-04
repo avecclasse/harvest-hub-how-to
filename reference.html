@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Next Steps & Troubleshooting — Harvest Hub Tutorial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0d9488',
+          },
+        },
+      },
+    };
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm" style="height: var(--nav-height, 3.5rem);">
+    <div class="max-w-4xl mx-auto px-4 h-full flex items-center justify-between">
+      <a href="index.html" class="font-semibold text-gray-900 hover:text-primary transition">Harvest Hub Tutorial</a>
+      <div class="flex gap-6 text-sm">
+        <a href="index.html" class="text-gray-600 hover:text-primary py-1">Introduction</a>
+        <a href="setup.html" class="text-gray-600 hover:text-primary py-1">Setup</a>
+        <a href="build.html" class="text-gray-600 hover:text-primary py-1">Build</a>
+        <a href="deploy.html" class="text-gray-600 hover:text-primary py-1">Deploy</a>
+        <a href="reference.html" class="font-semibold border-b-2 border-primary text-primary py-1">Reference</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Next Steps & Troubleshooting</h1>
+    <p class="text-gray-600 mb-10">Keep improving your app and fix common issues.</p>
+
+    <!-- 5.1 Making Changes -->
+    <section class="mb-12">
+      <h2 id="making-changes" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Making Changes to Your App</h2>
+      <p class="mb-4">Now that Harvest Hub is deployed, you can change it anytime:</p>
+      <ol class="list-decimal pl-6 space-y-2">
+        <li><strong>Edit in Cursor</strong> — Open your project and use Composer to describe what you want to add or change.</li>
+        <li><strong>Test locally</strong> — Run <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">npm run dev</code> and check that everything works at http://localhost:3000.</li>
+        <li><strong>Push to GitHub</strong> — Use Cursor’s source control (or ask Cursor to run the git commands) to push your changes.</li>
+        <li><strong>Automatic deployment</strong> — Vercel will detect the push and redeploy your app, usually within 1–2 minutes.</li>
+      </ol>
+    </section>
+
+    <!-- 5.2 Ideas for Features to Add -->
+    <section class="mb-12">
+      <h2 id="ideas" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Ideas for Features to Add</h2>
+      <p class="mb-4">Here are some Harvest Hub–specific features you could add next:</p>
+      <ul class="list-disc pl-6 space-y-2 mb-4">
+        <li><strong>Edit or cancel a reservation</strong> — Let users change their tier or cancel before pickup.</li>
+        <li><strong>Filter orders by status</strong> — On the “My Orders” page, add tabs or filters for “Upcoming,” “Ready for pickup,” “Completed.”</li>
+        <li><strong>Simple capacity view</strong> — A minimal view (even just for you) that shows pickup nodes and remaining capacity, to reinforce the allocation concept.</li>
+        <li><strong>More Learn content</strong> — Add another subsection or expand “Where Produce Comes From” with seasonal or local partner info.</li>
+      </ul>
+      <p class="mb-2">To add any of these, describe what you want in Cursor. For example:</p>
+      <div class="code-block-wrapper">
+        <pre><code class="language-text">I want users to be able to cancel a reservation from their orders page. Add a "Cancel" button next to each order that's not yet "Ready for pickup." When they click it, confirm with a dialog, then update the order status to "cancelled" (or remove it) in InstantDB.</code></pre>
+      </div>
+    </section>
+
+    <!-- 5.3 Troubleshooting (Collapsible FAQ) -->
+    <section class="mb-12">
+      <h2 id="troubleshooting" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Troubleshooting</h2>
+      <p class="mb-4">Use the sections below to fix common issues. Click a question to expand the answer.</p>
+
+      <div class="accordion">
+        <div class="accordion-item">
+          <button type="button" class="accordion-header w-full text-left">
+            <span>I see a blank page</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p class="mb-2">Open your browser’s developer console to see errors:</p>
+              <p class="mb-2"><strong>Windows:</strong> Right-click the page → Inspect → open the “Console” tab. <strong>Mac:</strong> Same, or Cmd+Option+J.</p>
+              <p class="mb-2">Look for red error messages. Copy the full message and paste it into Cursor’s Composer with: “I’m getting this error when I load my app. Please fix it.”</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button type="button" class="accordion-header w-full text-left">
+            <span>npm run dev shows an error</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p class="mb-2">Read the error message—it often says what’s wrong (e.g. “Module not found”).</p>
+              <p class="mb-2">A common fix: run <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">npm install</code> to make sure all packages are installed.</p>
+              <p>Then ask Cursor: “I’m getting this error when running npm run dev: [paste the error].”</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button type="button" class="accordion-header w-full text-left">
+            <span>My app works locally but not on Vercel</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p class="mb-2">Check that the environment variable <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">NEXT_PUBLIC_INSTANT_APP_ID</code> is set in Vercel (Project → Settings → Environment Variables).</p>
+              <p class="mb-2">Check the build logs in Vercel’s dashboard (Deployments → click a deployment → View Build Logs) for error messages.</p>
+              <p>Make sure you pushed all your files to GitHub (including <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">instant.schema.ts</code> and <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">instant.perms.ts</code>).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button type="button" class="accordion-header w-full text-left">
+            <span>Login isn't working</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p class="mb-2">Verify your InstantDB App ID is correct in your code and (if deployed) in Vercel’s environment variables.</p>
+              <p class="mb-2">Use a valid email address and check your spam folder for the magic code email.</p>
+              <p>In the <a href="https://instantdb.com/dash" target="_blank" rel="noopener">InstantDB dashboard</a>, confirm that email (Magic Code) auth is enabled for your app.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button type="button" class="accordion-header w-full text-left">
+            <span>My changes aren't showing up on the live site</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p class="mb-2">Did you push your changes to GitHub? Check your repository to see if the latest commit is there.</p>
+              <p class="mb-2">Vercel may take 1–2 minutes to rebuild after a push. Check the Vercel dashboard to see if a new deployment is in progress or just finished.</p>
+              <p>Try a hard refresh in your browser (Ctrl+Shift+R or Cmd+Shift+R) to avoid cached old version.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button type="button" class="accordion-header w-full text-left">
+            <span>I want to start over</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p class="mb-2">You can delete your Vercel project (Project Settings → delete) and your GitHub repository (Settings → Danger Zone → Delete repository).</p>
+              <p class="mb-2">Create a new folder, open it in Cursor, and run through the Build page again—paste the build prompt (with your App ID) and let Cursor generate a fresh project.</p>
+              <p>Starting over is fine and sometimes the easiest way to fix a messy state.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5.4 Learning More -->
+    <section class="mb-12">
+      <h2 id="learning-more" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Learning More</h2>
+      <p class="mb-4">You don’t need to read these to use your app—but if you’re curious how things work under the hood, these are excellent resources:</p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li><a href="https://nextjs.org/docs" target="_blank" rel="noopener">Next.js Documentation</a> — The framework your app is built with.</li>
+        <li><a href="https://www.instantdb.com/docs" target="_blank" rel="noopener">InstantDB Documentation</a> — Database and authentication.</li>
+        <li><a href="https://tailwindcss.com/docs" target="_blank" rel="noopener">Tailwind CSS Documentation</a> — Styling.</li>
+        <li><a href="https://react.dev" target="_blank" rel="noopener">React Documentation</a> — The UI library behind Next.js.</li>
+      </ul>
+    </section>
+
+    <nav class="flex justify-between border-t border-gray-200 pt-8 mt-12">
+      <a href="deploy.html" class="text-primary font-medium hover:underline">← Deploy</a>
+      <a href="index.html" class="text-primary font-medium hover:underline">Back to Introduction</a>
+    </nav>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>

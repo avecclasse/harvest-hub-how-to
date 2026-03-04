@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building Your App — Harvest Hub Tutorial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0d9488',
+          },
+        },
+      },
+    };
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm" style="height: var(--nav-height, 3.5rem);">
+    <div class="max-w-4xl mx-auto px-4 h-full flex items-center justify-between">
+      <a href="index.html" class="font-semibold text-gray-900 hover:text-primary transition">Harvest Hub Tutorial</a>
+      <div class="flex gap-6 text-sm">
+        <a href="index.html" class="text-gray-600 hover:text-primary py-1">Introduction</a>
+        <a href="setup.html" class="text-gray-600 hover:text-primary py-1">Setup</a>
+        <a href="build.html" class="font-semibold border-b-2 border-primary text-primary py-1">Build</a>
+        <a href="deploy.html" class="text-gray-600 hover:text-primary py-1">Deploy</a>
+        <a href="reference.html" class="text-gray-600 hover:text-primary py-1">Reference</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Building Your App</h1>
+    <p class="text-gray-600 mb-10">Use Cursor to generate your Harvest Hub app from one prompt.</p>
+
+    <!-- 3.1 Create Your Project Folder -->
+    <section class="mb-12">
+      <h2 id="project-folder" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Create Your Project Folder</h2>
+      <ol class="list-decimal pl-6 space-y-2">
+        <li>Create a new folder on your computer for this project. Name it something simple, like <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">harvest-hub</code> (no spaces—use dashes). Put it somewhere easy to find, like your Desktop or Documents.</li>
+        <li>Open <strong>Cursor</strong>.</li>
+        <li>Go to <strong>File → Open Folder</strong> and select your new folder.</li>
+        <li>You should see an empty folder in Cursor’s sidebar.</li>
+      </ol>
+    </section>
+
+    <!-- 3.2 The Build Prompt -->
+    <section class="mb-12">
+      <h2 id="build-prompt" class="text-2xl font-bold text-gray-900 mt-8 mb-4">The Build Prompt</h2>
+      <p class="mb-4">Next, you’ll ask Cursor to build your entire app by pasting one long prompt.</p>
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+        <p class="font-semibold text-gray-900 mb-2">Before you proceed</p>
+        <p>Make sure you completed the Setup page and have your <strong>InstantDB App ID</strong> copied. If not, go to your <a href="https://instantdb.com/dash" target="_blank" rel="noopener">InstantDB dashboard</a>, open your app, and copy the App ID.</p>
+      </div>
+      <ol class="list-decimal pl-6 space-y-2 mb-4">
+        <li>Open <strong>Cursor’s Composer</strong> (Ctrl+I on Windows, Cmd+I on Mac)—the chat where you describe what you want.</li>
+        <li>Copy the entire prompt below (click the Copy button on the code block).</li>
+        <li><strong>Replace <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">YOUR_APP_ID_HERE</code></strong> in the prompt with your actual InstantDB App ID (every place it appears).</li>
+        <li>Paste the prompt into Composer and press Enter. Let Cursor work—it may take a few minutes.</li>
+      </ol>
+      <p class="mb-4 font-medium text-gray-900">Build prompt (copy the entire block):</p>
+      <div class="code-block-wrapper">
+        <pre><code class="language-text">Build me a Next.js web application. Here are the complete specifications:
+
+## Tech Stack (DO NOT DEVIATE)
+- Next.js 14+ with App Router (not Pages Router)
+- TypeScript
+- Tailwind CSS for styling
+- InstantDB for database and authentication (use @instantdb/react)
+
+## InstantDB Configuration
+My InstantDB App ID is: YOUR_APP_ID_HERE
+
+Initialize InstantDB in a file at `src/lib/db.ts` like this:
+
+import { init } from '@instantdb/react';
+import schema from '../../instant.schema';
+
+const APP_ID = 'YOUR_APP_ID_HERE';
+
+export const db = init({
+  appId: APP_ID,
+  schema
+});
+
+## App Description
+Harvest Hub is a customer-facing web app where people can reserve a weekly produce bundle, choose a pricing tier (Equity, Anchor, or Steward) that supports the community capacity pool, read about the mission and sourcing, and track their order through a simple allocation process. This is reservation-only—no real payment processing. Users have accounts and see their own reservations and order status.
+
+## Data Model
+Create an InstantDB schema in `instant.schema.ts` with these entities:
+
+- **orders**: timestamp (date), tier (string: "equity" | "anchor" | "steward"), status (string: e.g. "received" | "in_queue" | "assigned" | "confirmed" | "ready"), assignedNodeId (optional string, or link to nodes)
+- **nodes**: name (string), capacity (number), remainingCapacity (number)
+
+And these relationships:
+- Each user ($users) has many orders
+- Each order belongs to one user
+- Each order can be assigned to one node (optional)
+
+## Authentication
+Implement user authentication using InstantDB's Magic Code flow:
+1. User enters their email
+2. InstantDB sends a 6-digit code to that email
+3. User enters the code to log in
+4. Use db.useAuth() to check login status
+5. Protect routes that require authentication (reserve, my orders)
+
+## Pages to Create
+- `/` — Home page: hero, links to Reserve, Dashboard, Learn, and Track (or My Orders). Show login prompt if not authenticated.
+- `/login` — Login page with email input and Magic Code verification
+- `/reserve` — Weekly produce bundle description, tier selector (Equity / Anchor / Steward), Reserve button (writes order to InstantDB). Require auth.
+- `/dashboard` — Community capacity pool dashboard: bundles funded this week, households supported, progress bar toward weekly capacity (can be derived from orders or mock data)
+- `/learn` — Learn section with three subsections: "Why This Exists" (food access, transportation barriers, coordinated distribution), "Where Produce Comes From" (sourcing, local pickup nodes), "What is Devoir" (coordination system for fair distribution). Static content is fine.
+- `/orders` or `/my-orders` — User's orders with status: Order Received → Entered Allocation Queue → Assigned to Pickup Node → Capacity Confirmed → Ready for Pickup. Optional transparency toggle showing tier, timestamp, pickup node, capacity snapshot.
+
+## Core Features
+1. Users can view the weekly produce bundle and reserve it (choose tier; no payment)
+2. Community capacity pool dashboard showing bundles funded, households supported, progress
+3. Learn section with the three subsections above
+4. Order tracking with allocation-style statuses; optional transparency details
+5. Mock allocation: when an order is created, simulate assignment (e.g. update status and assign to a node in InstantDB, or use a simple Next.js API route / server action that updates order status and node remainingCapacity)
+
+## UI Requirements
+- Clean, modern design using Tailwind CSS
+- Mobile-responsive (works on phones and desktops)
+- Clear navigation between all pages
+- Loading states while data is being fetched
+- Error messages when something goes wrong
+
+## File Structure
+Use this structure:
+
+src/
+├── app/
+│   ├── layout.tsx        # Root layout with InstantDB provider
+│   ├── page.tsx           # Home page
+│   ├── login/
+│   │   └── page.tsx       # Login page
+│   ├── reserve/
+│   │   └── page.tsx       # Reserve bundle
+│   ├── dashboard/
+│   │   └── page.tsx       # Capacity pool dashboard
+│   ├── learn/
+│   │   └── page.tsx       # Learn section (or sub-routes for each part)
+│   └── orders/
+│       └── page.tsx       # My orders / tracking
+├── components/
+│   └── [reusable components as needed]
+└── lib/
+    └── db.ts              # InstantDB initialization
+instant.schema.ts          # InstantDB schema
+instant.perms.ts           # InstantDB permissions
+
+## Getting Started Steps
+1. Create the Next.js app: npx create-next-app@latest . --tailwind --eslint --app --src-dir --import-alias "@/*" --typescript
+2. Install InstantDB: npm install @instantdb/react
+3. Create the schema, permissions, and all files listed above
+4. Set up permissions so users can read/write their own orders and read nodes (and any global data you need)
+
+Please create all necessary files with complete, working code. Replace YOUR_APP_ID_HERE with my actual InstantDB App ID everywhere in the prompt and in the generated code.</code></pre>
+      </div>
+    </section>
+
+    <!-- 3.3 Optional: Build prompt structure -->
+    <section class="mb-12">
+      <h2 id="prompt-structure" class="text-2xl font-bold text-gray-900 mt-8 mb-4">What’s in the Prompt?</h2>
+      <p class="mb-4">The prompt tells Cursor exactly what stack to use (so it doesn’t pick something else), how to connect to your InstantDB app, what data to store, how users log in, which pages to build, and what features to include. Everything is tailored to Harvest Hub so the generated app matches your idea.</p>
+    </section>
+
+    <!-- 3.4 What to Expect -->
+    <section class="mb-12">
+      <h2 id="what-to-expect" class="text-2xl font-bold text-gray-900 mt-8 mb-4">What to Expect</h2>
+      <p class="mb-4">When you run the prompt:</p>
+      <ul class="list-disc pl-6 space-y-2 mb-4">
+        <li>Cursor will start creating files—you’ll see them appear in the sidebar.</li>
+        <li>It may take a few minutes; let it finish.</li>
+        <li>Cursor might ask clarifying questions—answer them based on your Harvest Hub idea.</li>
+        <li>When it’s done, you’ll have a full project structure.</li>
+      </ul>
+      <p class="mb-4">Don’t worry if:</p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>There are errors at first—you’ll fix them with Cursor’s help.</li>
+        <li>The code looks overwhelming—you don’t need to understand every line.</li>
+        <li>Cursor asks you to run terminal commands—follow its instructions.</li>
+      </ul>
+    </section>
+
+    <!-- 3.5 Running Your App Locally -->
+    <section class="mb-12">
+      <h2 id="run-locally" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Running Your App Locally</h2>
+      <p class="mb-4">Once the project is generated, run it on your computer:</p>
+      <ol class="list-decimal pl-6 space-y-2 mb-4">
+        <li>Open the <strong>terminal in Cursor</strong> (View → Terminal, or Ctrl+`).</li>
+        <li>Type this command and press Enter:</li>
+      </ol>
+      <div class="code-block-wrapper">
+        <pre><code class="language-bash">npm run dev</code></pre>
+      </div>
+      <ol class="list-decimal pl-6 space-y-2 start-[3] mb-4">
+        <li>Wait for it to compile (you’ll see “Ready” and a URL).</li>
+        <li>Open your browser and go to <a href="http://localhost:3000" target="_blank" rel="noopener">http://localhost:3000</a>.</li>
+        <li>You should see your app.</li>
+      </ol>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <p class="font-semibold text-gray-900 mb-2">What is localhost?</p>
+        <p>When you run your app in development, it’s not on the internet yet—it runs only on your computer. <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">localhost</code> is a special address meaning “this computer.” <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">:3000</code> is the port—like a specific door your app is using.</p>
+      </div>
+    </section>
+
+    <!-- 3.6 Fixing Issues -->
+    <section class="mb-12">
+      <h2 id="fixing-issues" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Fixing Issues with Cursor</h2>
+      <p class="mb-4">If something doesn’t work:</p>
+      <ol class="list-decimal pl-6 space-y-2">
+        <li>Look at the error message (in the browser or in the terminal).</li>
+        <li>Copy the error message.</li>
+        <li>Open Cursor’s Composer (Ctrl+I / Cmd+I).</li>
+        <li>Paste the error and ask: “I’m getting this error. Please fix it.”</li>
+        <li>Cursor will suggest changes—apply them and try again.</li>
+      </ol>
+      <p class="mt-4">You don’t need to understand the error yourself; you just need to show it to the AI.</p>
+    </section>
+
+    <nav class="flex justify-between border-t border-gray-200 pt-8 mt-12">
+      <a href="setup.html" class="text-primary font-medium hover:underline">← Setup</a>
+      <a href="deploy.html" class="text-primary font-medium hover:underline">Next: Deployment →</a>
+    </nav>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>

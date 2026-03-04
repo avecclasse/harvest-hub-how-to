@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction & Concepts — Harvest Hub Tutorial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0d9488',
+          },
+        },
+      },
+    };
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm" style="height: var(--nav-height, 3.5rem);">
+    <div class="max-w-4xl mx-auto px-4 h-full flex items-center justify-between">
+      <a href="index.html" class="font-semibold text-gray-900 hover:text-primary transition">Harvest Hub Tutorial</a>
+      <div class="flex gap-6 text-sm">
+        <a href="index.html" class="font-semibold border-b-2 border-primary text-primary py-1">Introduction</a>
+        <a href="setup.html" class="text-gray-600 hover:text-primary py-1">Setup</a>
+        <a href="build.html" class="text-gray-600 hover:text-primary py-1">Build</a>
+        <a href="deploy.html" class="text-gray-600 hover:text-primary py-1">Deploy</a>
+        <a href="reference.html" class="text-gray-600 hover:text-primary py-1">Reference</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Introduction & Concepts</h1>
+    <p class="text-gray-600 mb-10">Get oriented and learn how web apps work before you build yours.</p>
+
+    <!-- 1.1 Welcome -->
+    <section class="mb-12">
+      <h2 id="welcome" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Welcome</h2>
+      <p class="mb-4">Congratulations on starting this journey. By the end of this tutorial, you will have a real, working web application on the internet—one that other people can visit and use.</p>
+      <p class="mb-4">You don’t need any coding experience. You’ll be directing an AI assistant (inside an editor called Cursor) to write the code for you. Your job is to follow the steps, paste the right prompts, and make decisions about your app. The AI does the heavy lifting.</p>
+      <p>That might feel surprising at first, but it’s a powerful way to learn: you see what gets built, you can change it by asking in plain English, and you build a mental model of how apps work along the way.</p>
+    </section>
+
+    <!-- 1.2 What We're Building -->
+    <section class="mb-12">
+      <h2 id="what-were-building" class="text-2xl font-bold text-gray-900 mt-8 mb-4">What We're Building</h2>
+      <p class="mb-4">You’re going to build <strong>Harvest Hub</strong>: a customer-facing web app where people can reserve a weekly produce bundle, choose a pricing tier that supports the community (Equity, Anchor, or Steward), learn about the mission behind the food system, and track their order as it moves through a simple allocation process.</p>
+      <p class="mb-4">The app includes a community capacity pool dashboard (bundles funded, households supported, progress toward distribution), a “Learn” section that explains why the system exists and where produce comes from, and order tracking with clear statuses—from “Order Received” to “Ready for Pickup.”</p>
+      <p>This is a real app. Once it’s deployed, you can share the URL and others can create accounts, make reservations, and see their orders. There’s no real payment in this version—it’s reservation-only—but the experience is complete and usable.</p>
+    </section>
+
+    <!-- 1.3 Understanding Dynamic Web Apps -->
+    <section class="mb-12">
+      <h2 id="understanding-web-apps" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Understanding Dynamic Web Apps</h2>
+
+      <h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">What is a Web App?</h3>
+      <p class="mb-4">A <strong>website</strong> is usually a set of static pages: text, images, and links that don’t change based on who’s viewing or what they do. Think of a restaurant’s menu page—everyone sees the same thing.</p>
+      <p class="mb-4">A <strong>web app</strong> is interactive and can store data. Users can sign in, create and save things, and see content that’s specific to them. Google Docs is a web app; so is your bank’s site. Harvest Hub is a web app because users have accounts, save their reservations, and see their own order history.</p>
+
+      <h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">The Client–Server Model</h3>
+      <p class="mb-4">Web apps work like a restaurant:</p>
+      <ul class="list-disc pl-6 mb-4 space-y-2 text-gray-700">
+        <li><strong>The dining room</strong> is where customers sit, read the menu, and place orders. They only see and interact with what’s in front of them.</li>
+        <li><strong>The kitchen</strong> is where food is prepared and stored. Customers never go into the kitchen.</li>
+        <li><strong>The waiter</strong> carries orders from the dining room to the kitchen and brings the food back.</li>
+      </ul>
+      <p class="mb-4">In web terms:</p>
+      <ul class="list-disc pl-6 mb-4 space-y-2 text-gray-700">
+        <li><strong>Frontend (client)</strong> = The dining room. It’s what users see in their browser—buttons, forms, text, images. It runs in the user’s device.</li>
+        <li><strong>Backend (server)</strong> = The kitchen. It stores data, processes requests, and sends responses. Users don’t see it directly.</li>
+        <li><strong>API</strong> = The waiter. It carries requests from the frontend to the backend and brings responses back.</li>
+      </ul>
+
+      <h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">Why Do We Need Both?</h3>
+      <ul class="list-disc pl-6 mb-4 space-y-2 text-gray-700">
+        <li><strong>Data persistence:</strong> If data only lived in the browser, it would disappear when the tab is closed. The backend stores it so it’s there next time.</li>
+        <li><strong>Multiple users:</strong> If two people use your app, they need to see consistent data. That data has to live in one central place—the backend.</li>
+        <li><strong>Security:</strong> Some logic (like “only this user can see their orders”) must run where users can’t change it—on the backend.</li>
+      </ul>
+
+      <h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">What This Means for Your App</h3>
+      <p class="mb-4">For Harvest Hub, the frontend is built with <strong>React</strong> (through a framework called Next.js)—a standard way to build interactive interfaces. The backend—data storage and user accounts—is handled by <strong>InstantDB</strong>, a service that gives you a database and authentication without building a server yourself. So you get the benefits of the client–server model without writing backend code from scratch.</p>
+    </section>
+
+    <!-- 1.4 The Tools We'll Use -->
+    <section class="mb-12">
+      <h2 id="tools" class="text-2xl font-bold text-gray-900 mt-8 mb-4">The Tools We'll Use</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full border border-gray-200 rounded-lg text-left">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 font-semibold text-gray-900">Tool</th>
+              <th class="px-4 py-3 font-semibold text-gray-900">What It Does</th>
+              <th class="px-4 py-3 font-semibold text-gray-900">Analogy</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-900"><a href="https://cursor.com" target="_blank" rel="noopener">Cursor</a></td>
+              <td class="px-4 py-3 text-gray-700">An AI-powered code editor that writes code for you when you describe what you want.</td>
+              <td class="px-4 py-3 text-gray-600">Your coding assistant.</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-900"><a href="https://nextjs.org/docs" target="_blank" rel="noopener">Next.js</a></td>
+              <td class="px-4 py-3 text-gray-700">A framework for building the frontend and connecting it to the backend.</td>
+              <td class="px-4 py-3 text-gray-600">The blueprint for your dining room.</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-900"><a href="https://www.instantdb.com/docs" target="_blank" rel="noopener">InstantDB</a></td>
+              <td class="px-4 py-3 text-gray-700">A backend service that stores your data and handles user authentication.</td>
+              <td class="px-4 py-3 text-gray-600">Your kitchen, fully staffed.</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-900"><a href="https://vercel.com" target="_blank" rel="noopener">Vercel</a></td>
+              <td class="px-4 py-3 text-gray-700">A hosting service that puts your app on the internet so anyone can visit it.</td>
+              <td class="px-4 py-3 text-gray-600">The building that houses your restaurant.</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-900"><a href="https://github.com" target="_blank" rel="noopener">GitHub</a></td>
+              <td class="px-4 py-3 text-gray-700">Where your code is stored and versioned; it connects to Vercel for automatic deployment.</td>
+              <td class="px-4 py-3 text-gray-600">A filing cabinet for your blueprints.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-gray-600">You’ll create accounts for GitHub, Vercel, and InstantDB in the next page. Cursor and Node.js (needed to run the app on your computer) will be installed there too.</p>
+    </section>
+
+    <nav class="flex justify-between border-t border-gray-200 pt-8 mt-12">
+      <span class="text-gray-500"></span>
+      <a href="setup.html" class="text-primary font-medium hover:underline">Next: Prerequisites & Setup →</a>
+    </nav>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prerequisites & Setup — Harvest Hub Tutorial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0d9488',
+          },
+        },
+      },
+    };
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm" style="height: var(--nav-height, 3.5rem);">
+    <div class="max-w-4xl mx-auto px-4 h-full flex items-center justify-between">
+      <a href="index.html" class="font-semibold text-gray-900 hover:text-primary transition">Harvest Hub Tutorial</a>
+      <div class="flex gap-6 text-sm">
+        <a href="index.html" class="text-gray-600 hover:text-primary py-1">Introduction</a>
+        <a href="setup.html" class="font-semibold border-b-2 border-primary text-primary py-1">Setup</a>
+        <a href="build.html" class="text-gray-600 hover:text-primary py-1">Build</a>
+        <a href="deploy.html" class="text-gray-600 hover:text-primary py-1">Deploy</a>
+        <a href="reference.html" class="text-gray-600 hover:text-primary py-1">Reference</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Prerequisites & Setup</h1>
+    <p class="text-gray-600 mb-10">Create your accounts and install the tools you need before building.</p>
+
+    <!-- 2.1 Create Your Accounts -->
+    <section class="mb-12">
+      <h2 id="accounts" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Create Your Accounts</h2>
+      <p class="mb-6">You need three free accounts. Take a few minutes to sign up and verify your email for each.</p>
+
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">GitHub Account</h3>
+          <p class="mb-2"><strong>What it is:</strong> A site where developers store and share code.</p>
+          <p class="mb-2"><strong>Why you need it:</strong> Your Harvest Hub code will live here, and GitHub connects to Vercel so your app can deploy automatically when you push changes.</p>
+          <p class="mb-2"><strong>Steps:</strong> Go to <a href="https://github.com" target="_blank" rel="noopener">github.com</a> → Sign up → Verify your email.</p>
+          <p class="text-gray-600">Choose a professional username—it will be part of your app’s URL when you use GitHub Pages or share your repo.</p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Vercel Account</h3>
+          <p class="mb-2"><strong>What it is:</strong> A service that hosts web apps (puts them on the internet).</p>
+          <p class="mb-2"><strong>Why you need it:</strong> Vercel will take your code from GitHub and make it available to anyone with the link.</p>
+          <p class="mb-2"><strong>Steps:</strong> Go to <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a> → Sign up with GitHub → Authorize access.</p>
+          <p class="text-gray-600">The free “Hobby” plan is all you need.</p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">InstantDB Account</h3>
+          <p class="mb-2"><strong>What it is:</strong> A backend service that stores data and handles user authentication.</p>
+          <p class="mb-2"><strong>Why you need it:</strong> Your app needs somewhere to store reservations, user accounts, and order data.</p>
+          <p class="mb-2"><strong>Steps:</strong> Go to <a href="https://www.instantdb.com" target="_blank" rel="noopener">instantdb.com</a> → Sign up → Verify your email.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2.2 Create Your InstantDB App -->
+    <section class="mb-12">
+      <h2 id="instantdb-app" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Create Your InstantDB App</h2>
+      <p class="mb-4">This step is critical. Your app will connect to InstantDB using a unique identifier called an App ID.</p>
+      <ol class="list-decimal pl-6 space-y-3 mb-6">
+        <li>Go to <a href="https://instantdb.com/dash" target="_blank" rel="noopener">https://instantdb.com/dash</a> (the InstantDB dashboard).</li>
+        <li>Click <strong>“Create App”</strong>.</li>
+        <li>Name your app (e.g. <strong>Harvest Hub</strong>).</li>
+        <li>You’ll see your <strong>App ID</strong>—a long string of letters, numbers, and dashes, like:</li>
+      </ol>
+      <div class="code-block-wrapper">
+        <pre><code class="language-text">566ffee5-e773-4b68-a132-29678f8f6eea</code></pre>
+      </div>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 my-4">
+        <p class="font-semibold text-gray-900 mb-2">What is the App ID?</p>
+        <p class="mb-2">Think of the App ID like a mailing address for your database. When your app reads or writes data, it needs to know where to send the request. The App ID tells InstantDB: “this request is for <em>this</em> app’s data, not someone else’s.”</p>
+        <p>The App ID is <strong>public</strong>—it’s safe to include in your code. It’s not a secret like a password. InstantDB uses a separate permissions system to control who can read or write what.</p>
+      </div>
+      <ol class="list-decimal pl-6 space-y-2 start-[5]">
+        <li><strong>Copy your App ID</strong> and save it somewhere (a notes app or text file). You’ll paste it into the build prompt in the next page.</li>
+        <li>Keep the InstantDB dashboard tab open—you’ll return to it when you configure permissions.</li>
+      </ol>
+    </section>
+
+    <!-- 2.3 Install Node.js -->
+    <section class="mb-12">
+      <h2 id="nodejs" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Install Node.js</h2>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+        <p class="font-semibold text-gray-900 mb-2">What is Node.js?</p>
+        <p class="mb-2">Website code usually runs in the user’s browser. During development, you also need to run code on your own computer—to preview the app, install packages, and prepare it for deployment. Node.js lets your computer understand and run JavaScript (the language web apps are built with).</p>
+        <p>Think of Node.js as a translator that lets your machine run the same language the browser uses.</p>
+      </div>
+      <ol class="list-decimal pl-6 space-y-2 mb-4">
+        <li>Go to <a href="https://nodejs.org" target="_blank" rel="noopener">https://nodejs.org</a>.</li>
+        <li>Download the <strong>LTS version</strong> (Long Term Support—the stable, recommended one).</li>
+        <li>Run the installer and follow the prompts.</li>
+        <li>To verify: open your terminal and type <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">node --version</code>. You should see a version number.</li>
+      </ol>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <p class="font-semibold text-gray-900 mb-2">What is a terminal?</p>
+        <p class="mb-2">The terminal (or “command line”) is a text-based way to give instructions to your computer. Instead of clicking icons, you type commands. It can look intimidating, but you’ll only need a few commands, and Cursor will often run them for you.</p>
+        <p><strong>On Mac:</strong> Open the “Terminal” app (search in Spotlight). <strong>On Windows:</strong> Open “PowerShell” or “Command Prompt” (search in the Start menu).</p>
+      </div>
+    </section>
+
+    <!-- 2.4 Install Cursor -->
+    <section class="mb-12">
+      <h2 id="cursor" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Install Cursor</h2>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+        <p class="font-semibold text-gray-900 mb-2">What is Cursor?</p>
+        <p>Cursor is a code editor—a text editor built for writing code. Unlike a normal editor, it has a built-in AI assistant. You describe what you want in plain English, and Cursor can write and change the code for you. You’ll be using Cursor to direct the AI, not to type code yourself.</p>
+      </div>
+      <ol class="list-decimal pl-6 space-y-2">
+        <li>Go to <a href="https://cursor.com" target="_blank" rel="noopener">https://cursor.com</a>.</li>
+        <li>Download and install Cursor.</li>
+        <li>Open Cursor and complete the setup wizard.</li>
+        <li>Sign in or create an account when prompted.</li>
+      </ol>
+    </section>
+
+    <!-- 2.5 Configure Cursor for This Project -->
+    <section class="mb-12">
+      <h2 id="cursor-docs" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Configure Cursor for This Project</h2>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+        <p class="font-semibold text-gray-900 mb-2">Why This Step Matters</p>
+        <p class="mb-2">Cursor’s AI is trained on lots of code and docs, but it has a “knowledge cutoff”—it may not know the latest details for newer tools like InstantDB. By adding InstantDB’s documentation to Cursor, you give the AI a reference it can use while helping you, which improves the code it generates.</p>
+        <p class="mb-2"><strong>When to add docs:</strong> For newer or less common tools (like InstantDB), or when you get wrong or outdated suggestions.</p>
+        <p><strong>When it’s not necessary:</strong> For very popular tools (e.g. React, basic JavaScript) that the AI already knows well.</p>
+      </div>
+      <ol class="list-decimal pl-6 space-y-2">
+        <li>Open <strong>Cursor Settings</strong> (Ctrl+, on Windows, Cmd+, on Mac).</li>
+        <li>Go to <strong>Features → Docs</strong>.</li>
+        <li>Click <strong>“Add Doc”</strong>.</li>
+        <li>Enter this URL: <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">https://www.instantdb.com/docs</code></li>
+        <li>Wait for Cursor to finish indexing (may take a minute).</li>
+        <li>You should see InstantDB listed in your docs.</li>
+      </ol>
+    </section>
+
+    <nav class="flex justify-between border-t border-gray-200 pt-8 mt-12">
+      <a href="index.html" class="text-primary font-medium hover:underline">← Introduction</a>
+      <a href="build.html" class="text-primary font-medium hover:underline">Next: Building Your App →</a>
+    </nav>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>

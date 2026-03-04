@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deployment — Harvest Hub Tutorial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0d9488',
+          },
+        },
+      },
+    };
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body class="min-h-screen bg-gray-50">
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm" style="height: var(--nav-height, 3.5rem);">
+    <div class="max-w-4xl mx-auto px-4 h-full flex items-center justify-between">
+      <a href="index.html" class="font-semibold text-gray-900 hover:text-primary transition">Harvest Hub Tutorial</a>
+      <div class="flex gap-6 text-sm">
+        <a href="index.html" class="text-gray-600 hover:text-primary py-1">Introduction</a>
+        <a href="setup.html" class="text-gray-600 hover:text-primary py-1">Setup</a>
+        <a href="build.html" class="text-gray-600 hover:text-primary py-1">Build</a>
+        <a href="deploy.html" class="font-semibold border-b-2 border-primary text-primary py-1">Deploy</a>
+        <a href="reference.html" class="text-gray-600 hover:text-primary py-1">Reference</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Deployment</h1>
+    <p class="text-gray-600 mb-10">Get your Harvest Hub app from your computer onto the internet.</p>
+
+    <!-- 4.1 What is Deployment -->
+    <section class="mb-12">
+      <h2 id="what-is-deployment" class="text-2xl font-bold text-gray-900 mt-8 mb-4">What is Deployment?</h2>
+      <p class="mb-4">Right now, your app runs only on your computer. If you close your laptop, no one can use it. <strong>Deployment</strong> means putting your app on a server—a computer that’s always on—so anyone with the URL can use it anytime.</p>
+      <p class="mb-4">We’ll use <strong>Vercel</strong> because:</p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>It’s free for personal projects.</li>
+        <li>It automatically redeploys when you update your code (push to GitHub).</li>
+        <li>It was created by the team behind Next.js, so they work together seamlessly.</li>
+      </ul>
+    </section>
+
+    <!-- 4.2 Push Your Code to GitHub -->
+    <section class="mb-12">
+      <h2 id="push-github" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Push Your Code to GitHub</h2>
+      <p class="mb-4">Vercel will pull your code from GitHub, so first we put the project on GitHub.</p>
+      <ol class="list-decimal pl-6 space-y-2 mb-4">
+        <li>Go to <a href="https://github.com" target="_blank" rel="noopener">github.com</a> and sign in.</li>
+        <li>Click the <strong>+</strong> in the top right → <strong>New repository</strong>.</li>
+        <li>Name your repository (e.g. <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">harvest-hub</code>—lowercase, dashes for spaces).</li>
+        <li>Keep it <strong>Public</strong> (required for free Vercel hosting).</li>
+        <li>Do <strong>not</strong> check “Add a README” or “Add .gitignore”—your project already has these from Cursor.</li>
+        <li>Click <strong>Create repository</strong>.</li>
+        <li>You’ll see a page with instructions—keep this tab open.</li>
+      </ol>
+      <p class="mb-4">Then, in Cursor:</p>
+      <ol class="list-decimal pl-6 space-y-2">
+        <li>Open the terminal (View → Terminal).</li>
+        <li>Ask Cursor: “Please help me push this project to GitHub. My repository URL is [paste the URL from GitHub].”</li>
+        <li>Cursor will guide you through the git commands (e.g. <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">git init</code>, <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">git add .</code>, <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">git commit</code>, <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">git remote add origin ...</code>, <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">git push</code>).</li>
+        <li>Refresh your GitHub page—you should see your files.</li>
+      </ol>
+    </section>
+
+    <!-- 4.3 Deploy to Vercel -->
+    <section class="mb-12">
+      <h2 id="deploy-vercel" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Deploy to Vercel</h2>
+      <ol class="list-decimal pl-6 space-y-2 mb-4">
+        <li>Go to <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a> and sign in (with GitHub).</li>
+        <li>Click <strong>“Add New Project”</strong> (or “Import Project”).</li>
+        <li>You’ll see your GitHub repos—select your Harvest Hub repo.</li>
+        <li>Before deploying, add your InstantDB App ID:
+          <ul class="list-disc pl-6 mt-2 space-y-1">
+            <li>Click <strong>“Environment Variables”</strong> (or expand that section).</li>
+            <li>Add: <strong>Name</strong> = <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">NEXT_PUBLIC_INSTANT_APP_ID</code>, <strong>Value</strong> = your InstantDB App ID.</li>
+            <li>Click <strong>Add</strong>.</li>
+          </ul>
+        </li>
+        <li>Click <strong>“Deploy”</strong>.</li>
+        <li>Wait 1–2 minutes for the build to finish.</li>
+        <li>When you see “Congratulations!”—click the URL to open your live app.</li>
+      </ol>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <p class="font-semibold text-gray-900 mb-2">What are Environment Variables?</p>
+        <p class="mb-2">Some values (like your App ID) shouldn’t be hardcoded in files that are public on GitHub. <strong>Environment variables</strong> let you pass configuration into your app at build or runtime without putting secrets in the code.</p>
+        <p>The <code class="px-1.5 py-0.5 bg-gray-200 rounded text-sm">NEXT_PUBLIC_</code> prefix tells Next.js this variable is safe to expose to the browser. The InstantDB App ID is public by design; the prefix just makes it available to client-side code.</p>
+      </div>
+    </section>
+
+    <!-- 4.4 Your App is Live -->
+    <section class="mb-12">
+      <h2 id="live" class="text-2xl font-bold text-gray-900 mt-8 mb-4">Your App is Live</h2>
+      <p class="mb-4">Your Harvest Hub app is now on the internet. You can:</p>
+      <ul class="list-disc pl-6 space-y-2 mb-4">
+        <li>Share the URL with friends or classmates.</li>
+        <li>Open it on your phone or any device.</li>
+        <li>Use it even when your own computer is off.</li>
+      </ul>
+      <p><strong>Automatic updates:</strong> Whenever you push new code to GitHub, Vercel will detect the change, rebuild your app, and redeploy it. This usually takes 1–2 minutes. You don’t have to do anything else.</p>
+    </section>
+
+    <nav class="flex justify-between border-t border-gray-200 pt-8 mt-12">
+      <a href="build.html" class="text-primary font-medium hover:underline">← Build</a>
+      <a href="reference.html" class="text-primary font-medium hover:underline">Next: Reference & Troubleshooting →</a>
+    </nav>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>
