@@ -65,7 +65,7 @@
       </ol>
       <p class="mb-4 font-medium text-gray-900">Build prompt (copy the entire block):</p>
       <div class="code-block-wrapper">
-        <pre><code class="language-text">Build me a Next.js web application. Here are the complete specifications:
+        <pre><code class="language-text">Build me a Next.js web application according to the following specifications. Do not simplify the logic described below. The Harvest Hub system relies on deterministic capacity rules, and they must be implemented in code. Here are the complete specifications:
 
 ## Tech Stack (DO NOT DEVIATE)
 - Next.js 14+ with App Router (not Pages Router)
@@ -89,18 +89,58 @@ export const db = init({
 });
 
 ## App Description
-Harvest Hub is a customer-facing web app where people can reserve a weekly produce bundle, choose a pricing tier (Equity, Anchor, or Steward) that supports the community capacity pool, read about the mission and sourcing, and track their order through a simple allocation process. This is reservation-only—no real payment processing. Users have accounts and see their own reservations and order status.
+Harvest Hub is a customer-facing web app where people can reserve a weekly produce bundle, choose a pricing tier (Equity, Anchor, or Steward) that supports the community capacity pool, read about the mission and sourcing, and track their order through a simple allocation process. The system includes a Community Capacity Pool, where Steward participation expands access to Equity households. This is reservation-only—no real payment processing. Users have accounts and see their own reservations and order status.
+
+## Core System Concept
+Every two weeks is treated as a market cycle. All reservation logic is enforced at the market level, not just per order. The app must maintain deterministic capacity rules governing: seat availability, tier caps, unlocking of Equity seats, and waitlist promotion.
+
+## Capacity Pool Rules (Must Implement)
+These rules define the Harvest Hub system.
+1. Every market begins with: baseEquitySeats=5
+2. Additional Equity seats unlock through Steward participation: 1 Steward reservation unlocks 1 additional Equity seat
+2a. Example: 5 base Equity + 3 Steward reservations = 8 available Equity seats 
+
+## Structural Tier Caps 
+Each tier has a maximum structural participation level. These must be enforced when reservations occur. 
+1. Equity ≤ 30% of total market capacity
+2. Anchor ≤ 55% of total market capacity
+3. Steward ≤ 25% of total market capacity 
+If a reservation would exceed a tier cap, the system must prevent confirmation and place the user on a waitlist.
+
+## Priority Equity Waitlist
+Equity demand may exceed available Equity seats. When an Equity user attempts to reserve, and no Equity seats are available: order.status = "waitlisted_priority"
+Priority waitlisted Equity households must automatically be promoted when new Steward reservations unlock additional Equity capacity
+Promotion order must be FIFO by reservation timestamp
+
+## Standard Waitlist
+If the entire market capacity is full, all additional reservations should enter: status = "waitlisted_standard"
+These users are promoted only if the total capacity increases or orders are canceled.
+
+## Reservation Flow 
+When a reservation is created, the system must:
+-Check total market capacity
+-Check tier caps
+-Calculate unlocked Equity seats
+-Determine whether the reservation is confirmed, priority waitlisted, or standard waitlisted
 
 ## Data Model
 Create an InstantDB schema in `instant.schema.ts` with these entities:
 
-- **orders**: timestamp (date), tier (string: "equity" | "anchor" | "steward"), status (string: e.g. "received" | "in_queue" | "assigned" | "confirmed" | "ready"), assignedNodeId (optional string, or link to nodes)
+- **orders**: timestamp (date), tier (string: "equity" | "anchor" | "steward"), status (string: e.g. "received" | "in_queue" | "confirmed" | "waitlisted_priority" | "waitlisted_standard" | "assigned" | "ready"), assignedNodeId (optional string, or link to nodes), marketId (string), waitlistType (optional string: "priority" | "standard") 
 - **nodes**: name (string), capacity (number), remainingCapacity (number)
+- **markets**: marketId (string), totalCapacity (number), baseEquitySeats (number), equityCapPercent (number), anchorCapPercent (number), stewardCapPercent (number), status (string: "open" | "closed"), createdAt (date)
 
 And these relationships:
 - Each user ($users) has many orders
 - Each order belongs to one user
+- Each order belongs to one market
 - Each order can be assigned to one node (optional)
+
+Embed these defaults into **markets** logic:
+- baseEquitySeats = 5
+- equityCapPercent = 0.30
+- anchorCapPercent = 0.55
+- stewardCapPercent = 0.25
 
 ## Authentication
 Implement user authentication using InstantDB's Magic Code flow:
@@ -113,8 +153,8 @@ Implement user authentication using InstantDB's Magic Code flow:
 ## Pages to Create
 - `/` — Home page: hero, links to Reserve, Dashboard, Learn, and Track (or My Orders). Show login prompt if not authenticated.
 - `/login` — Login page with email input and Magic Code verification
-- `/reserve` — Weekly produce bundle description, tier selector (Equity / Anchor / Steward), Reserve button (writes order to InstantDB). Require auth.
-- `/dashboard` — Community capacity pool dashboard: bundles funded this week, households supported, progress bar toward weekly capacity (can be derived from orders or mock data)
+- `/reserve` — Weekly produce bundle description, tier selector (Equity / Anchor / Steward), Reserve button (writes order to InstantDB). Require auth. The system must validate tier caps, unlocked Equity seats, and total capacity.
+- `/dashboard` — Community capacity pool dashboard: bundles funded this week, households supported, progress bar toward weekly capacity (can be derived from orders or mock data), pie chart displaying total market capacity with unlocked seats/Equity cap (seats + %)/Anchor cap/Steward cap
 - `/learn` — Learn section with three subsections: "Why This Exists" (food access, transportation barriers, coordinated distribution), "Where Produce Comes From" (sourcing, local pickup nodes), "What is Devoir" (coordination system for fair distribution). Static content is fine.
 - `/orders` or `/my-orders` — User's orders with status: Order Received → Entered Allocation Queue → Assigned to Pickup Node → Capacity Confirmed → Ready for Pickup. Optional transparency toggle showing tier, timestamp, pickup node, capacity snapshot.
 
@@ -124,6 +164,7 @@ Implement user authentication using InstantDB's Magic Code flow:
 3. Learn section with the three subsections above
 4. Order tracking with allocation-style statuses; optional transparency details
 5. Mock allocation: when an order is created, simulate assignment (e.g. update status and assign to a node in InstantDB, or use a simple Next.js API route / server action that updates order status and node remainingCapacity)
+6. Deterministic logic calculates unlocked Equity seats, tier caps, and waitlist promotions automatically
 
 ## UI Requirements
 - Clean, modern design using Tailwind CSS
